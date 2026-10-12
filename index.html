@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Геометрія 9 клас: координати</title>
+<style>
+:root{
+  --bg:#fbf6e4; --card:#ffffff; --text:#2b2410; --muted:#7a6d45;
+  --accent:#a87400; --teal:#d2640a; --amber:#c4301c; --good:#1f9d55; --bad:#d94f4f; --border:#eadfb5;
+  --grad1:#f7cd45; --grad2:#f2a93a; --grad3:#fff0a6; --on:#2b2200;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1a1607; --card:#2a2410; --text:#fbf4dc; --muted:#cbbf8f;
+    --accent:#ffd75e; --teal:#ffa94d; --amber:#ff8a6b; --good:#3fbf76; --bad:#f16b6b; --border:#4a3f1a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1a1607; --card:#2a2410; --text:#fbf4dc; --muted:#cbbf8f;
+  --accent:#ffd75e; --teal:#ffa94d; --amber:#ff8a6b; --good:#3fbf76; --bad:#f16b6b; --border:#4a3f1a;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+button,.tab,input{touch-action:manipulation;}
+body{
+  margin:0; color:var(--text); min-height:100%;
+  background:
+    radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--grad1) 35%, transparent), transparent 55%),
+    radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--grad2) 28%, transparent), transparent 50%),
+    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--grad3) 25%, transparent), transparent 55%),
+    var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  display:flex; justify-content:center;
+}
+.wrap{width:100%; max-width:480px; padding:20px 16px 40px;}
+h1{
+  font-size:25px; text-align:center; margin:8px 0 4px; font-weight:800;
+  background:linear-gradient(90deg,var(--grad1),var(--grad2));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.sub{text-align:center; color:var(--muted); font-size:15px; margin-bottom:16px;}
+.tabs{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;}
+.tab{
+  text-align:center; padding:10px 6px; border-radius:12px; min-height:54px;
+  background:var(--card); border:1px solid var(--border); cursor:pointer;
+  font-size:15.5px; font-weight:700; color:var(--muted); user-select:none; line-height:1.25;
+  display:flex; align-items:center; justify-content:center;
+}
+.tab.active{background:linear-gradient(135deg,var(--grad1),var(--grad2)); color:var(--on); border-color:transparent;}
+.stats{display:flex; justify-content:space-between; font-size:15px; padding:0 6px; margin-bottom:10px;}
+.stats span{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:6px 12px; color:var(--muted);}
+.stats b{color:var(--accent); font-size:18px;}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:18px;
+  padding:22px 16px; margin-bottom:16px; position:relative; overflow:hidden;
+  box-shadow:0 10px 30px -12px color-mix(in srgb, var(--grad2) 45%, transparent);
+}
+.card::before{content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,var(--grad1),var(--grad2),var(--grad3));}
+.qtext{text-align:center; font-size:19px; line-height:1.55; margin-bottom:14px;}
+.qtext .pt{color:var(--accent); font-weight:800; white-space:nowrap;}
+.qtext .big{display:block; color:var(--accent); font-size:25px; font-weight:800; margin:8px 0 2px; line-height:1.4;}
+.inrow{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; align-items:center; font-size:24px; font-weight:800; color:var(--accent); margin-bottom:10px;}
+.inrow .brk{flex-basis:100%; height:0;}
+input.numin{
+  width:88px; min-height:48px; font-size:22px; font-weight:700; padding:6px 4px; border-radius:10px;
+  border:2px solid var(--accent); background:var(--bg); color:var(--text); text-align:center;
+}
+input.numin{-moz-appearance:textfield;}
+input.numin::-webkit-outer-spin-button,input.numin::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+input.numin.ok{border-color:var(--good); background:color-mix(in srgb, var(--good) 16%, var(--bg));}
+input.numin.bad{border-color:var(--bad); background:color-mix(in srgb, var(--bad) 14%, var(--bg));}
+.choices{display:flex; flex-direction:column; gap:10px; margin-bottom:10px;}
+.choice{
+  padding:12px 10px; min-height:56px; font-size:19px; font-weight:700; border-radius:14px; line-height:1.4;
+  border:2px solid var(--border); background:var(--card); color:var(--text); text-align:center;
+}
+.choice.good{border-color:var(--good); background:color-mix(in srgb, var(--good) 18%, var(--card));}
+.choice.bad{border-color:var(--bad); background:color-mix(in srgb, var(--bad) 16%, var(--card));}
+button{font-family:inherit; cursor:pointer;}
+.btn-primary{
+  width:100%; min-height:54px; padding:14px 16px; border:none; border-radius:12px;
+  font-size:19px; font-weight:700; color:var(--on);
+  background:linear-gradient(135deg,var(--grad1),var(--grad2)); box-shadow:0 6px 16px -6px color-mix(in srgb, var(--grad2) 60%, transparent);
+}
+.btn-secondary{
+  width:100%; min-height:50px; padding:12px 16px; margin-top:8px; border-radius:12px; font-size:17px; font-weight:700;
+  background:transparent; color:var(--accent); border:2px solid var(--accent);
+}
+.feedback{min-height:28px; text-align:center; font-weight:700; margin:12px 0 4px; font-size:20px;}
+.feedback.good{color:var(--good);} .feedback.bad{color:var(--bad);}
+.explain{
+  font-size:17px; color:var(--text); background:var(--bg); border-radius:12px; padding:12px 14px;
+  margin-top:8px; line-height:1.6; display:none; border:1px dashed var(--border); text-align:center;
+}
+.explain .formula{display:block; font-size:18px; font-weight:800; color:var(--accent); white-space:pre-line;}
+.explain sub{font-size:0.7em; line-height:0; vertical-align:sub;}
+.explain .steps{display:block; font-size:16.5px; white-space:pre-line;}
+.explain .ans{display:block; margin-top:8px; font-size:20px; font-weight:800; color:var(--accent);}
+.plot{margin:12px auto 0; max-width:340px;}
+.plot svg{width:100%; height:auto; display:block;}
+.pl-grid{stroke:var(--border); stroke-width:1;}
+.pl-axis{stroke:var(--muted); stroke-width:1.5;}
+.pl-lbl{fill:var(--muted); font-size:10px; text-anchor:middle;}
+.pl-name{fill:var(--text); font-size:13px; font-weight:800;}
+.pl-seg{stroke:var(--accent); stroke-width:2.5;}
+.pl-circ{stroke:var(--teal); stroke-width:2.5; fill:color-mix(in srgb, var(--teal) 10%, transparent);}
+.pl-pt{fill:var(--accent);} .pl-mid{fill:var(--amber);} .pl-cen{fill:var(--teal);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📍 Геометрія, 9 клас</h1>
+  <div class="sub">Координати на площині</div>
+
+  <div class="tabs">
+    <div class="tab active" id="tabMid">Середина відрізка</div>
+    <div class="tab" id="tabDist">Відстань між точками</div>
+    <div class="tab" id="tabCircle">Рівняння кола</div>
+    <div class="tab" id="tabAll">Усі теми</div>
+  </div>
+
+  <div class="stats">
+    <span>Правильно: <b id="score">0</b></span>
+    <span>Завдання: <b id="qnum">1</b></span>
+  </div>
+
+  <div class="card">
+    <div class="qtext" id="qtext"></div>
+    <div id="inputsBox"></div>
+    <div class="choices" id="choicesBox"></div>
+    <button class="btn-primary" id="checkBtn">Перевірити</button>
+    <button class="btn-secondary" id="hintBtn">📘 Формула</button>
+    <div class="feedback" id="feedback"></div>
+    <div class="explain" id="explain"></div>
+    <div class="plot" id="plotBox"></div>
+    <button class="btn-secondary" id="nextBtn" style="display:none;">Наступне →</button>
+  </div>
+</div>
+
+<script>
+/* ---------- утиліти ---------- */
+const MINUS = '−';
+function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+function pick(a){ return a[randInt(0,a.length-1)]; }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=randInt(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function fmtN(n){ n = Math.round(n*100)/100; const s = String(Math.abs(n)).replace('.',','); return n < 0 ? MINUS+s : s; }
+function pr(n){ return n < 0 ? '('+fmtN(n)+')' : fmtN(n); }
+function PT(name,x,y){ return name+'('+fmtN(x)+'; '+fmtN(y)+')'; }
+function sp(t){ return '<span class="pt">'+t+'</span>'; }
+function part(v,c){ return c === 0 ? v+'²' : '('+v+' '+(c>0?'−':'+')+' '+Math.abs(c)+')²'; }
+function eq(a,b,rhs){ return part('x',a)+' + '+part('y',b)+' = '+rhs; }
+function inRange(v,lim){ return Math.abs(v) <= lim; }
+
+const FORMULAS = {
+  mid:'M((x₁ + x₂) : 2; (y₁ + y₂) : 2)\nСередина відрізка — півсума координат',
+  dist:'AB = √((x₂ − x₁)² + (y₂ − y₁)²)',
+  circle:'(x − a)² + (y − b)² = R²\nC(a; b) — центр, R — радіус'
+};
+
+/* ---------- середина відрізка ---------- */
+function genMid1(){
+  const wantHalf = Math.random() < 0.25;
+  for(let t=0;t<800;t++){
+    const x1=randInt(-8,8), y1=randInt(-8,8), x2=randInt(-8,8), y2=randInt(-8,8);
+    if(x1===x2 && y1===y2) continue;
+    const sx=x1+x2, sy=y1+y2, even = sx%2===0 && sy%2===0;
+    if(wantHalf === even) continue;
+    const mx=sx/2, my=sy/2;
+    return {topic:'mid', kind:'num',
+      text:'Знайдіть координати середини '+sp('M')+' відрізка '+sp('AB')+', якщо '+sp(PT('A',x1,y1))+' і '+sp(PT('B',x2,y2))+'.',
+      inputs:[{pre:'M(',post:';'},{pre:'',post:')'}], answers:[mx,my],
+      explain:['xM = (x₁ + x₂) : 2 = ('+fmtN(x1)+' + '+pr(x2)+') : 2 = '+fmtN(mx),
+               'yM = (y₁ + y₂) : 2 = ('+fmtN(y1)+' + '+pr(y2)+') : 2 = '+fmtN(my)],
+      answerText:PT('M',mx,my),
+      plot:{points:[{n:'A',x:x1,y:y1},{n:'B',x:x2,y:y2},{n:'M',x:mx,y:my,c:'mid'}], segs:[[0,1]]}};
+  }
+}
+function genMid2(){
+  for(let t=0;t<800;t++){
+    const mx=randInt(-6,6), my=randInt(-6,6), x1=randInt(-8,8), y1=randInt(-8,8);
+    const x2=2*mx-x1, y2=2*my-y1;
+    if(!inRange(x2,10) || !inRange(y2,10) || (x1===x2 && y1===y2)) continue;
+    return {topic:'mid', kind:'num',
+      text:'Точка '+sp(PT('M',mx,my))+' — середина відрізка '+sp('AB')+'. Знайдіть координати точки '+sp('B')+', якщо '+sp(PT('A',x1,y1))+'.',
+      inputs:[{pre:'B(',post:';'},{pre:'',post:')'}], answers:[x2,y2],
+      explain:['xB = 2xM − xA = 2 · '+pr(mx)+' − '+pr(x1)+' = '+fmtN(x2),
+               'yB = 2yM − yA = 2 · '+pr(my)+' − '+pr(y1)+' = '+fmtN(y2)],
+      answerText:PT('B',x2,y2),
+      plot:{points:[{n:'A',x:x1,y:y1},{n:'B',x:x2,y:y2},{n:'M',x:mx,y:my,c:'mid'}], segs:[[0,1]]}};
+  }
+}
+
+/* ---------- відстань між точками ---------- */
+const TRIPLES = [[3,4,5],[4,3,5],[6,8,10],[8,6,10],[5,12,13],[12,5,13],[0,5,5],[5,0,5],[0,7,7],[8,0,8]];
+function genDist1(){
+  for(let t=0;t<800;t++){
+    const [a,b,c] = pick(TRIPLES);
+    const dx = a*pick([1,-1]), dy = b*pick([1,-1]);
+    const x1=randInt(-8,8), y1=randInt(-8,8), x2=x1+dx, y2=y1+dy;
+    if(!inRange(x2,9) || !inRange(y2,9)) continue;
+    return {topic:'dist', kind:'num',
+      text:'Знайдіть відстань між точками '+sp(PT('A',x1,y1))+' і '+sp(PT('B',x2,y2))+'.',
+      inputs:[{pre:'AB =',post:''}], answers:[c],
+      explain:['AB = √((x₂ − x₁)² + (y₂ − y₁)²)',
+               'AB = √(('+fmtN(x2)+' − '+pr(x1)+')² + ('+fmtN(y2)+' − '+pr(y1)+')²) = √('+(dx*dx)+' + '+(dy*dy)+') = √'+(c*c)+' = '+c],
+      answerText:'AB = '+c,
+      plot:{points:[{n:'A',x:x1,y:y1},{n:'B',x:x2,y:y2}], segs:[[0,1]]}};
+  }
+}
+function genDist2(){
+  for(let t=0;t<800;t++){
+    const dx=randInt(-6,6), dy=randInt(-6,6);
+    if(dx===0 && dy===0) continue;
+    const x1=randInt(-8,8), y1=randInt(-8,8), x2=x1+dx, y2=y1+dy;
+    if(!inRange(x2,9) || !inRange(y2,9)) continue;
+    const d2 = dx*dx+dy*dy;
+    return {topic:'dist', kind:'num',
+      text:'Знайдіть квадрат відстані '+sp('AB²')+' між точками '+sp(PT('A',x1,y1))+' і '+sp(PT('B',x2,y2))+'.',
+      inputs:[{pre:'AB² =',post:''}], answers:[d2],
+      explain:['AB² = (x₂ − x₁)² + (y₂ − y₁)²',
+               'AB² = ('+fmtN(x2)+' − '+pr(x1)+')² + ('+fmtN(y2)+' − '+pr(y1)+')² = '+(dx*dx)+' + '+(dy*dy)+' = '+d2],
+      answerText:'AB² = '+d2,
+      plot:{points:[{n:'A',x:x1,y:y1},{n:'B',x:x2,y:y2}], segs:[[0,1]]}};
+  }
+}
+
+/* ---------- рівняння кола ---------- */
+function genCirc1(){
+  for(let t=0;t<800;t++){
+    const a=randInt(-6,6), b=randInt(-6,6), R=randInt(2,7);
+    if(a===0 && b===0) continue;
+    const correct = eq(a,b,R*R);
+    const pool = [eq(-a,b,R*R), eq(a,-b,R*R), eq(-a,-b,R*R), eq(a,b,R), eq(b,a,R*R), eq(a,b,4*R*R)];
+    const uniq = [...new Set(pool)].filter(s => s !== correct);
+    if(uniq.length < 3) continue;
+    const choices = shuffle([correct, ...shuffle(uniq).slice(0,3)]);
+    return {topic:'circle', kind:'choice',
+      text:'Складіть рівняння кола з центром '+sp(PT('C',a,b))+' і радіусом '+sp('R = '+R)+'.',
+      choices, correct:choices.indexOf(correct),
+      explain:['(x − a)² + (y − b)² = R²','a = '+fmtN(a)+', b = '+fmtN(b)+', R² = '+R+'² = '+(R*R)],
+      answerText:correct,
+      plot:{points:[{n:'C',x:a,y:b,c:'cen'}], circle:{cx:a,cy:b,r:R}}};
+  }
+}
+function genCirc2(){
+  for(let t=0;t<800;t++){
+    const a=randInt(-6,6), b=randInt(-6,6), R=randInt(2,7);
+    if(a===0 && b===0) continue;
+    return {topic:'circle', kind:'num',
+      text:'Знайдіть центр і радіус кола, заданого рівнянням:<span class="big">'+eq(a,b,R*R)+'</span>',
+      inputs:[{pre:'C(',post:';'},{pre:'',post:')'},{br:true,pre:'R =',post:''}], answers:[a,b,R],
+      explain:['Загальний вигляд: (x − a)² + (y − b)² = R²',
+               'Знак у дужках протилежний: a = '+fmtN(a)+', b = '+fmtN(b),
+               'R² = '+(R*R)+', отже R = '+R],
+      answerText:'C('+fmtN(a)+'; '+fmtN(b)+'), R = '+R,
+      plot:{points:[{n:'C',x:a,y:b,c:'cen'}], circle:{cx:a,cy:b,r:R}}};
+  }
+}
+const POS_OPTS = ['Лежить на колі','Лежить усередині кола','Лежить поза колом'];
+function genCirc3(){
+  for(let t=0;t<800;t++){
+    const a=randInt(-4,4), b=randInt(-4,4), R=pick([3,4,5,5,6]), target=pick(['on','in','out']);
+    let px, py;
+    if(target === 'on'){
+      const offs = [[R,0],[-R,0],[0,R],[0,-R]];
+      if(R === 5) offs.push([3,4],[4,3],[-3,4],[-4,3],[3,-4],[4,-3],[-3,-4],[-4,-3]);
+      const [dx,dy] = pick(offs); px=a+dx; py=b+dy;
+    } else {
+      for(let k=0;k<500;k++){
+        const dx=randInt(-R-2,R+2), dy=randInt(-R-2,R+2), d=dx*dx+dy*dy;
+        if((target==='in' && d<R*R && d>0) || (target==='out' && d>R*R)){ px=a+dx; py=b+dy; break; }
+      }
+    }
+    if(px === undefined) continue;
+    const d2 = (px-a)*(px-a)+(py-b)*(py-b), R2 = R*R;
+    const idx = d2 === R2 ? 0 : (d2 < R2 ? 1 : 2);
+    const rel = d2 === R2 ? '=' : (d2 < R2 ? '<' : '>');
+    return {topic:'circle', kind:'choice',
+      text:'Коло задано рівнянням:<span class="big">'+eq(a,b,R2)+'</span>Де розташована точка '+sp(PT('P',px,py))+'?',
+      choices:POS_OPTS.slice(), correct:idx,
+      explain:['Знаходимо d² = (xP − a)² + (yP − b)²',
+               'd² = ('+fmtN(px)+' − '+pr(a)+')² + ('+fmtN(py)+' − '+pr(b)+')² = '+d2,
+               'R² = '+R2+', тому d² '+rel+' R²'],
+      answerText:POS_OPTS[idx],
+      plot:{points:[{n:'C',x:a,y:b,c:'cen'},{n:'P',x:px,y:py}], circle:{cx:a,cy:b,r:R}}};
+  }
+}
+function genCirc4(){
+  for(let t=0;t<800;t++){
+    const a=randInt(-5,5), b=randInt(-5,5);
+    let dx, dy, R;
+    if(Math.random() < 0.4){ dx = pick([3,4,-3,-4]); dy = (Math.abs(dx)===3 ? 4 : 3)*pick([1,-1]); R = 5; }
+    else { R = randInt(2,6); if(Math.random()<0.5){ dx = R*pick([1,-1]); dy = 0; } else { dx = 0; dy = R*pick([1,-1]); } }
+    const A=[a+dx,b+dy], B=[a-dx,b-dy];
+    if(!inRange(A[0],10)||!inRange(A[1],10)||!inRange(B[0],10)||!inRange(B[1],10)) continue;
+    const correct = eq(a,b,R*R);
+    const pool = [eq(-a,-b,R*R), eq(a,b,R), eq(a,b,4*R*R), eq(A[0],A[1],R*R), eq(-a,b,R*R), eq(a,-b,R*R)];
+    const uniq = [...new Set(pool)].filter(s => s !== correct);
+    if(uniq.length < 3) continue;
+    const choices = shuffle([correct, ...shuffle(uniq).slice(0,3)]);
+    return {topic:'circle', kind:'choice',
+      text:'Відрізок '+sp('AB')+' — діаметр кола, '+sp(PT('A',A[0],A[1]))+', '+sp(PT('B',B[0],B[1]))+'. Складіть рівняння цього кола.',
+      choices, correct:choices.indexOf(correct),
+      explain:['Центр — середина діаметра:',
+               'C('+fmtN((A[0]+B[0])/2)+'; '+fmtN((A[1]+B[1])/2)+')',
+               'AB = √(('+fmtN(B[0])+' − '+pr(A[0])+')² + ('+fmtN(B[1])+' − '+pr(A[1])+')²) = √'+(4*R*R)+' = '+(2*R),
+               'R = AB : 2 = '+R+', R² = '+(R*R)],
+      answerText:correct,
+      plot:{points:[{n:'A',x:A[0],y:A[1]},{n:'B',x:B[0],y:B[1]},{n:'C',x:a,y:b,c:'cen'}], segs:[[0,1]], circle:{cx:a,cy:b,r:R}}};
+  }
+}
+function genCirc5(){
+  for(let t=0;t<800;t++){
+    const a=randInt(-5,5), b=randInt(-5,5), dx=randInt(-6,6), dy=randInt(-6,6);
+    if(dx===0 && dy===0) continue;
+    const px=a+dx, py=b+dy;
+    if(!inRange(px,10) || !inRange(py,10)) continue;
+    const R2 = dx*dx+dy*dy;
+    return {topic:'circle', kind:'num',
+      text:'Коло з центром '+sp(PT('C',a,b))+' проходить через точку '+sp(PT('P',px,py))+'. Знайдіть '+sp('R²')+'.',
+      inputs:[{pre:'R² =',post:''}], answers:[R2],
+      explain:['R² = CP² = (xP − a)² + (yP − b)²',
+               'R² = ('+fmtN(px)+' − '+pr(a)+')² + ('+fmtN(py)+' − '+pr(b)+')² = '+(dx*dx)+' + '+(dy*dy)+' = '+R2],
+      answerText:'R² = '+R2,
+      plot:{points:[{n:'C',x:a,y:b,c:'cen'},{n:'P',x:px,y:py}], segs:[[0,1]], circle:{cx:a,cy:b,r:Math.sqrt(R2)}}};
+  }
+}
+
+function genQuestion(tab){
+  const topic = tab === 'all' ? pick(['mid','dist','circle']) : tab;
+  if(topic === 'mid') return pick([genMid1, genMid1, genMid2])();
+  if(topic === 'dist') return pick([genDist1, genDist2])();
+  return pick([genCirc1, genCirc2, genCirc3, genCirc4, genCirc5])();
+}
+
+/* ---------- малюнок ---------- */
+function plotSvg(spec){
+  const pts = spec.points || [];
+  let minX=0, maxX=0, minY=0, maxY=0;
+  const upd = (x,y) => { minX=Math.min(minX,x); maxX=Math.max(maxX,x); minY=Math.min(minY,y); maxY=Math.max(maxY,y); };
+  pts.forEach(p => upd(p.x,p.y));
+  if(spec.circle){ const c = spec.circle; upd(c.cx-c.r,c.cy-c.r); upd(c.cx+c.r,c.cy+c.r); }
+  minX-=1; maxX+=1; minY-=1; maxY+=1;
+  const span = Math.max(maxX-minX, maxY-minY);
+  const loX = (minX+maxX)/2 - span/2, loY = (minY+maxY)/2 - span/2;
+  const S = 320, pad = 18, sc = (S-2*pad)/span;
+  const X = x => pad + (x-loX)*sc, Y = y => S - pad - (y-loY)*sc;
+  const step = span > 26 ? 5 : (span > 14 ? 2 : 1);
+  let s = '<svg viewBox="0 0 '+S+' '+S+'" role="img" aria-label="Малюнок у системі координат">';
+  for(let i=Math.ceil(loX); i<=loX+span; i++){ if(i % step === 0 && i !== 0) s += '<line class="pl-grid" x1="'+X(i)+'" y1="'+pad/2+'" x2="'+X(i)+'" y2="'+(S-pad/2)+'"/>'; }
+  for(let j=Math.ceil(loY); j<=loY+span; j++){ if(j % step === 0 && j !== 0) s += '<line class="pl-grid" x1="'+pad/2+'" y1="'+Y(j)+'" x2="'+(S-pad/2)+'" y2="'+Y(j)+'"/>'; }
+  s += '<line class="pl-axis" x1="'+pad/2+'" y1="'+Y(0)+'" x2="'+(S-pad/2)+'" y2="'+Y(0)+'"/>';
+  s += '<line class="pl-axis" x1="'+X(0)+'" y1="'+pad/2+'" x2="'+X(0)+'" y2="'+(S-pad/2)+'"/>';
+  const lab = span <= 12 ? 1 : (span <= 24 ? 2 : 5);
+  for(let i=Math.ceil(loX); i<=loX+span; i++){ if(i !== 0 && i % lab === 0) s += '<text class="pl-lbl" x="'+X(i)+'" y="'+(Y(0)+13)+'">'+fmtN(i)+'</text>'; }
+  for(let j=Math.ceil(loY); j<=loY+span; j++){ if(j !== 0 && j % lab === 0) s += '<text class="pl-lbl" x="'+(X(0)-9)+'" y="'+(Y(j)+3)+'">'+fmtN(j)+'</text>'; }
+  if(spec.circle){ const c = spec.circle; s += '<circle class="pl-circ" cx="'+X(c.cx)+'" cy="'+Y(c.cy)+'" r="'+(c.r*sc)+'"/>'; }
+  (spec.segs || []).forEach(([i,j]) => { s += '<line class="pl-seg" x1="'+X(pts[i].x)+'" y1="'+Y(pts[i].y)+'" x2="'+X(pts[j].x)+'" y2="'+Y(pts[j].y)+'"/>'; });
+  pts.forEach(p => {
+    const cls = p.c === 'mid' ? 'pl-mid' : p.c === 'cen' ? 'pl-cen' : 'pl-pt';
+    s += '<circle class="'+cls+'" cx="'+X(p.x)+'" cy="'+Y(p.y)+'" r="5"/>';
+    s += '<text class="pl-name" x="'+(X(p.x)+8)+'" y="'+(Y(p.y)-7)+'">'+p.n+'</text>';
+  });
+  return s + '</svg>';
+}
+</script>
+<script>
+/* ---------- інтерфейс ---------- */
+const $ = id => document.getElementById(id);
+const tabs = {mid:$('tabMid'), dist:$('tabDist'), circle:$('tabCircle'), all:$('tabAll')};
+const state = {tab:'mid', score:0, qnum:1, current:null, answered:false, last:''};
+
+function parseNum(s){
+  s = String(s).trim().replace(/\s/g,'').replace(/−/g,'-').replace(',','.');
+  return /^-?\d+(\.\d+)?$/.test(s) ? Number(s) : NaN;
+}
+function setHidden(el, hidden, display){ el.style.display = hidden ? 'none' : (display || 'block'); }
+
+function renderQuestion(q){
+  $('qtext').innerHTML = q.text;
+  $('plotBox').innerHTML = '';
+  $('feedback').textContent = ''; $('feedback').className = 'feedback';
+  $('explain').style.display = 'none'; $('explain').innerHTML = '';
+  setHidden($('nextBtn'), true); setHidden($('hintBtn'), false);
+  if(q.kind === 'num'){
+    $('inputsBox').innerHTML = '<div class="inrow">' + q.inputs.map((it,i) =>
+      (it.br ? '<div class="brk"></div>' : '') +
+      (it.pre ? '<span>'+it.pre+'</span>' : '') +
+      '<input class="numin" id="in'+i+'" type="number" step="any" autocomplete="off" enterkeyhint="next" placeholder="?">' +
+      (it.post ? '<span>'+it.post+'</span>' : '')).join('') + '</div>';
+    $('choicesBox').innerHTML = '';
+    setHidden($('checkBtn'), false);
+    $('in0').focus();
+  } else {
+    $('inputsBox').innerHTML = '';
+    $('choicesBox').innerHTML = q.choices.map((c,i) => '<button class="choice" data-i="'+i+'"></button>').join('');
+    $('choicesBox').querySelectorAll('.choice').forEach((b,i) => { b.textContent = q.choices[i]; });
+    setHidden($('checkBtn'), true);
+  }
+}
+
+function newQuestion(){
+  let q;
+  for(let i=0;i<20;i++){ q = genQuestion(state.tab); if(q.text !== state.last) break; }
+  state.last = q.text; state.current = q; state.answered = false;
+  $('qnum').textContent = state.qnum;
+  renderQuestion(q);
+}
+
+function withSubscripts(s){
+  const esc = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return esc.replace(/(^|[^A-Za-zА-Яа-я])([xy])([ABCMP])(?![A-Za-z])/g, '$1$2<sub>$3</sub>');
+}
+function showExplanation(q){
+  const ex = $('explain');
+  ex.innerHTML = '<span class="steps"></span><span class="ans"></span>';
+  ex.querySelector('.steps').innerHTML = withSubscripts(q.explain.join('\n'));
+  ex.querySelector('.ans').textContent = 'Відповідь: ' + q.answerText;
+  ex.style.display = 'block';
+  $('plotBox').innerHTML = plotSvg(q.plot);
+}
+
+function finish(ok){
+  state.answered = true;
+  const q = state.current;
+  if(ok){ state.score++; $('score').textContent = state.score; }
+  $('feedback').textContent = ok ? '✅ Правильно!' : '❌ Неправильно';
+  $('feedback').className = 'feedback ' + (ok ? 'good' : 'bad');
+  setHidden($('checkBtn'), true); setHidden($('hintBtn'), true);
+  setHidden($('nextBtn'), false);
+  showExplanation(q);
+}
+
+function checkNum(){
+  const q = state.current;
+  const vals = q.answers.map((_,i) => parseNum($('in'+i).value));
+  if(vals.some(v => isNaN(v))){
+    const bad = q.answers.some((_,i) => { const el = $('in'+i); return el.validity && el.validity.badInput; });
+    $('feedback').textContent = bad ? 'Не вдалося прочитати число. Дріб пиши з крапкою, наприклад 2.5' : 'Введи числа в усі клітинки';
+    $('feedback').className = 'feedback bad';
+    return;
+  }
+  let all = true;
+  vals.forEach((v,i) => {
+    const el = $('in'+i), ok = Math.abs(v - q.answers[i]) < 1e-9;
+    el.classList.remove('ok','bad'); el.classList.add(ok ? 'ok' : 'bad'); el.disabled = true;
+    if(!ok) all = false;
+  });
+  finish(all);
+}
+function checkChoice(i){
+  if(state.answered) return;
+  const q = state.current, btns = $('choicesBox').querySelectorAll('.choice');
+  btns.forEach(b => b.disabled = true);
+  btns[q.correct].classList.add('good');
+  if(i !== q.correct) btns[i].classList.add('bad');
+  finish(i === q.correct);
+}
+function checkAnswer(){ if(!state.answered && state.current.kind === 'num') checkNum(); }
+
+function showHint(){
+  const q = state.current, ex = $('explain');
+  ex.innerHTML = '<span class="formula"></span>';
+  ex.querySelector('.formula').textContent = FORMULAS[q.topic];
+  ex.style.display = 'block';
+}
+
+function start(){ state.score = 0; state.qnum = 1; state.last = ''; $('score').textContent = 0; newQuestion(); }
+function switchTab(tab){
+  state.tab = tab;
+  Object.keys(tabs).forEach(k => tabs[k].classList.toggle('active', k === tab));
+  start();
+}
+
+Object.keys(tabs).forEach(k => tabs[k].addEventListener('click', () => switchTab(k)));
+$('checkBtn').addEventListener('click', checkAnswer);
+$('hintBtn').addEventListener('click', showHint);
+$('nextBtn').addEventListener('click', () => { state.qnum++; newQuestion(); });
+$('choicesBox').addEventListener('click', e => { const b = e.target.closest('.choice'); if(b) checkChoice(Number(b.dataset.i)); });
+$('inputsBox').addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  const next = $('in' + (Number((e.target.id || 'in0').slice(2)) + 1));
+  if(next && !next.disabled) next.focus(); else checkAnswer();
+});
+switchTab('mid');
+</script>
+</body>
+</html>
